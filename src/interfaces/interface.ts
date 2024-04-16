@@ -4,3 +4,18 @@ export interface Product {
     price: number;
     weight: number;
 }
+
+export interface Delivery {
+   id?: number;
+   deliveryDate: Date;
+   fromWareHouse: string;
+   destination: string;
+   productOrder: ProductOrder[];
+}
+
+export interface ProductOrder {
+    id?: number;
+    productId: number;
+    quantity: number;
+}
+

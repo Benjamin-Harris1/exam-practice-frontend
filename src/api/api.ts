@@ -9,7 +9,7 @@ export async function getProducts() {
   return response.data;
 }
 
-export async function getProductsById(id: string) {
+export async function getProductsById(id: number) {
   const response = await axios.get(`${API_URL}/product/${id}`);
   return response.data;
 }
@@ -24,12 +24,12 @@ export async function createProduct(product: Product) {
   return response.data;
 }
 
-export async function updateProduct(id: string, product: Product) {
+export async function updateProduct(id: number, product: Product) {
   const response = await axios.put(`${API_URL}/product/${id}`, product);
   return response.data;
 }
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(id: number) {
   const response = await axios.delete(`${API_URL}/product/${id}`);
   return response.data;
 }
@@ -40,7 +40,7 @@ export async function getDeliveries() {
   return response.data;
 }
 
-export async function getDeliveriesById(id: string) {
+export async function getDeliveriesById(id: number) {
   const response = await axios.get(`${API_URL}/delivery/${id}`);
   return response.data;
 }
@@ -50,12 +50,12 @@ export async function createDelivery(delivery: Delivery) {
   return response.data;
 }
 
-export async function updateDelivery(id: string, delivery: Delivery) {
+export async function updateDelivery(id: number, delivery: Delivery) {
   const response = await axios.put(`${API_URL}/delivery/${id}`, delivery);
   return response.data;
 }
 
-export async function deleteDelivery(id: string) {
+export async function deleteDelivery(id: number) {
   const response = await axios.delete(`${API_URL}/delivery/${id}`);
   return response.data;
 }

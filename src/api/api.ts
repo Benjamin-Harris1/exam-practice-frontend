@@ -66,6 +66,12 @@ export async function getDeliveriesForVan(id: number){
 }
 
 export async function assignDeliveryToVan(deliveryId: number, vanId: number){
-    const response = await axios.post(`${API_URL}/delivery/${deliveryId}/van/${vanId}`);
+    const response = await axios.post(`${API_URL}/delivery/${deliveryId}/assignToVan/${vanId}`);
+    return response.data;
+}
+
+// Van
+export async function getVans(){
+    const response = await axios.get(`${API_URL}/van`);
     return response.data;
 }

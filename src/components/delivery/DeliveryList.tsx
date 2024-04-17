@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Delivery } from "../../interfaces/interface";
-import { deleteDelivery, getDeliveries } from "../../api/api";
+import { Delivery, Van } from "../../interfaces/interface";
+import { assignDeliveryToVan, deleteDelivery, getDeliveries, getVans } from "../../api/api";
 import Modal from "../Modal";
 import DeliveryForm from "./DeliveryForm";
 import DeliveryDetails from "./DeliveryDetails";
@@ -8,16 +8,26 @@ import DeliveryDetails from "./DeliveryDetails";
 export function DeliveryList() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"create" | "edit" | "delete" | "details">("create");
+  const [modalType, setModalType] = useState<"create" | "edit" | "delete" | "details" | "van">("create");
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
+  const [vanId, setVanId] = useState("");
+  const [vans, setVans] = useState([]);
 
   useEffect(() => {
     fetchDeliveries();
+    fetchVans();
   }, []);
 
   const fetchDeliveries = async () => {
     const response = await getDeliveries();
     setDeliveries(response);
+  };
+
+  const fetchVans = async () => {
+    const response = await getVans();
+    console.log(response);
+    
+    setVans(response);
   };
 
   const openModal = (type: "create" | "edit" | "delete", delivery?: Delivery) => {
@@ -26,9 +36,16 @@ export function DeliveryList() {
     setSelectedDelivery(delivery || null);
   };
 
+  const openAssignToVan = (delivery: Delivery) => {
+    setSelectedDelivery(delivery);
+    setIsModalOpen(true);
+    setModalType("van");
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedDelivery(null); // Reset selected product on modal close
+    setVanId("");
     fetchDeliveries(); // Refresh the product list after any operation
   };
 
@@ -44,6 +61,18 @@ export function DeliveryList() {
     setSelectedDelivery(delivery);
     setIsModalOpen(true);
     setModalType("details");
+  };
+
+  const handleAssignToVan = async (deliveryId: number, vanId: number) => {
+    try {
+      await assignDeliveryToVan(deliveryId, vanId);
+      alert("Delivery successfully assigned to van.");
+      closeModal();
+      fetchDeliveries(); // Refresh the deliveries list
+    } catch (error) {
+      console.error("Failed to assign delivery to van:", error);
+      alert("Failed to assign delivery to van.");
+    }
   };
 
   return (
@@ -70,6 +99,13 @@ export function DeliveryList() {
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
               >
                 Delete
+              </button>
+              <button
+                onClick={() => openAssignToVan(delivery)}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded ml-2"
+                title="Assign to Van"
+              >
+                <i className="fas fa-shuttle-van"></i>
               </button>
             </div>
           </li>
@@ -105,6 +141,31 @@ export function DeliveryList() {
         <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedDelivery.destination}>
           <DeliveryDetails delivery={selectedDelivery} />
         </Modal>
+      ) : modalType === "van" && selectedDelivery ? (
+        <Modal isOpen={isModalOpen} onClose={closeModal} title="Assign Delivery to Van">
+      <div>
+        <label htmlFor="vanSelect">Choose a Van:</label>
+        <select
+          id="vanSelect"
+          value={vanId}
+          onChange={(e) => setVanId(e.target.value)}
+        >
+          <option value="">Select a Van</option>
+          {vans.map((van: Van) => (
+            <option key={van.id} value={van.id}>
+              {van.brand} {van.model} - Capacity: {van.capacity}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            if (selectedDelivery && selectedDelivery.id && vanId) handleAssignToVan(selectedDelivery.id, parseInt(vanId));
+          }}
+        >
+          Assign
+        </button>
+      </div>
+    </Modal>
       ) : (
         <DeliveryForm
           isOpen={isModalOpen}

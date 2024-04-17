@@ -19,3 +19,10 @@ export interface ProductOrder {
     quantity: number;
 }
 
+export interface Van {
+    id?: number;
+    brand: string;
+    model: string;
+    capacity: number;
+}
+

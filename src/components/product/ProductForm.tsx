@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Product } from '../../interfaces/interface';
 import { createProduct, updateProduct } from '../../api/api';
-import InputField from '../../components/InputField';
-import Modal from '../../components/Modal';
+import InputField from '../InputField';
+import Modal from '../Modal';
 
 interface ProductFormProps {
   isOpen: boolean;

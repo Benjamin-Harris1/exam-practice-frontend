@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Delivery, Product } from '../../interfaces/interface';
 import { createDelivery, updateDelivery, getProducts } from '../../api/api';
-import InputField from '../../components/InputField';
-import Modal from '../../components/Modal';
-import ProductOrdersList from '../../components/productorder/ProductOrderList';
+import InputField from '../InputField';
+import Modal from '../Modal';
+import ProductOrdersList from '../productorder/ProductOrderList';
 
 interface DeliveryFormProps {
   isOpen: boolean;

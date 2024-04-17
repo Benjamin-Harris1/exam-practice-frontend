@@ -1,47 +1,48 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../interfaces/interface";
-import { deleteProduct, getProducts } from "../../api/api";
-import ProductForm from "./ProductForm";
-import Modal from "../../components/Modal";
-import ProductDetails from "./ProductDetails";
+import { Delivery } from "../../interfaces/interface";
+import { deleteDelivery, getDeliveries } from "../../api/api";
+import Modal from "../Modal";
+import DeliveryForm from "./DeliveryForm";
+import DeliveryDetails from "./DeliveryDetails";
 
-export function ProductList() {
-  const [products, setProducts] = useState<Product[]>([]);
+
+export function DeliveryList() {
+  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit' | 'delete' | 'details'>('create');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
 
   useEffect(() => {
-    fetchProducts();
+    fetchDeliveries();
   }, []);
 
-  const fetchProducts = async () => {
-    const response = await getProducts();
-    setProducts(response);
+  const fetchDeliveries = async () => {
+    const response = await getDeliveries();
+    setDeliveries(response);
   };
 
-  const openModal = (type: 'create' | 'edit' | 'delete', product?: Product) => {
+  const openModal = (type: 'create' | 'edit' | 'delete', delivery?: Delivery) => {
     setIsModalOpen(true);
     setModalType(type);
-    setSelectedProduct(product || null);
+    setSelectedDelivery(delivery || null);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedProduct(null); // Reset selected product on modal close
-    fetchProducts(); // Refresh the product list after any operation
+    setSelectedDelivery(null); // Reset selected product on modal close
+    fetchDeliveries(); // Refresh the product list after any operation
   };
 
   const handleDelete = async () => {
-    if (selectedProduct && selectedProduct.id !== undefined) {
-      await deleteProduct(selectedProduct.id);
-      fetchProducts();
+    if (selectedDelivery && selectedDelivery.id !== undefined) {
+      await deleteDelivery(selectedDelivery.id);
+      fetchDeliveries();
       setIsModalOpen(false);
     }
   }
 
-  const openProductDetails = (product: Product) => {
-    setSelectedProduct(product);
+  const openDeliveryDetails = (delivery: Delivery) => {
+    setSelectedDelivery(delivery);
     setIsModalOpen(true);
     setModalType('details');
   }
@@ -49,27 +50,27 @@ export function ProductList() {
   return (
     <div>
       <h1 className="text-3xl font-bold leading-tight text-gray-900">
-        Product Management
+        Delivery Management
       </h1>
       <button
         onClick={() => openModal("create")}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Add New Product
+        Add New Delivery
       </button>
       <ul className="mt-6">
-        {products.map((product) => (
-          <li key={product.id} className="flex justify-between items-center bg-white shadow px-4 py-2 rounded-lg mt-2">
-            <span onClick={() => openProductDetails(product)} className="hover:underline cursor-pointer">{product.name}</span>
+        {deliveries.map((delivery) => (
+          <li key={delivery.id} className="flex justify-between items-center bg-white shadow px-4 py-2 rounded-lg mt-2">
+            <span onClick={() => openDeliveryDetails(delivery)} className="hover:underline cursor-pointer">{delivery.destination}</span>
             <div>
               <button
-                onClick={() => openModal("edit", product)}
+                onClick={() => openModal("edit", delivery)}
                 className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded ml-2"
               >
                 Update
               </button>
               <button
-                onClick={() => openModal("delete", product)}
+                onClick={() => openModal("delete", delivery)}
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
               >
                 Delete
@@ -79,7 +80,7 @@ export function ProductList() {
         ))}
       </ul>
       {
-        modalType === 'delete' && selectedProduct ? (
+        modalType === 'delete' && selectedDelivery ? (
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Confirm Deletion">
          <div>
             <p className="text-lg mb-4">
@@ -87,7 +88,7 @@ export function ProductList() {
             </p>
             <div className="bg-gray-100 p-4 rounded-lg">
               <h2 className="text-gray-800 font-semibold">
-                <span className="text-blue-600">{selectedProduct?.name}</span>
+                <span className="text-blue-600">{selectedDelivery?.destination}</span>
               </h2>
             </div>
             <div className="flex justify-end items-center p-4 mt-4 border-t border-gray-200">
@@ -106,17 +107,17 @@ export function ProductList() {
             </div>
           </div>
           </Modal>
-        ) : modalType === 'details' && selectedProduct ? (
-            <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedProduct.name}>
-                <ProductDetails product={selectedProduct} />
+        ) : modalType === 'details' && selectedDelivery ? (
+            <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedDelivery.destination}>
+                <DeliveryDetails delivery={selectedDelivery} />
             </Modal>
         ) : (
-            <ProductForm
+            <DeliveryForm
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 modalType={modalType}
-                product={selectedProduct}
-                refreshProducts={fetchProducts}
+                delivery={selectedDelivery}
+                refreshDeliveries={fetchDeliveries}
             />
         )
       }

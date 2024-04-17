@@ -1,6 +1,6 @@
 import  { useState } from 'react';
-import { ProductList } from '../product/ProductList';
-import { DeliveryList } from '../delivery/DeliveryList';
+import { ProductList } from '../../components/product/ProductList';
+import { DeliveryList } from '../../components/delivery/DeliveryList';
 
 export default function AdminPage() {
 

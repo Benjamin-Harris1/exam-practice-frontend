@@ -1,48 +1,47 @@
 import { useEffect, useState } from "react";
-import { Delivery } from "../../interfaces/interface";
-import { deleteDelivery, getDeliveries } from "../../api/api";
-import Modal from "../../components/Modal";
-import DeliveryForm from "./DeliveryForm";
-import DeliveryDetails from "./DeliveryDetails";
+import { Product } from "../../interfaces/interface";
+import { deleteProduct, getProducts } from "../../api/api";
+import ProductForm from "./ProductForm";
+import Modal from "../Modal";
+import ProductDetails from "./ProductDetails";
 
-
-export function DeliveryList() {
-  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+export function ProductList() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit' | 'delete' | 'details'>('create');
-  const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    fetchDeliveries();
+    fetchProducts();
   }, []);
 
-  const fetchDeliveries = async () => {
-    const response = await getDeliveries();
-    setDeliveries(response);
+  const fetchProducts = async () => {
+    const response = await getProducts();
+    setProducts(response);
   };
 
-  const openModal = (type: 'create' | 'edit' | 'delete', delivery?: Delivery) => {
+  const openModal = (type: 'create' | 'edit' | 'delete', product?: Product) => {
     setIsModalOpen(true);
     setModalType(type);
-    setSelectedDelivery(delivery || null);
+    setSelectedProduct(product || null);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedDelivery(null); // Reset selected product on modal close
-    fetchDeliveries(); // Refresh the product list after any operation
+    setSelectedProduct(null); // Reset selected product on modal close
+    fetchProducts(); // Refresh the product list after any operation
   };
 
   const handleDelete = async () => {
-    if (selectedDelivery && selectedDelivery.id !== undefined) {
-      await deleteDelivery(selectedDelivery.id);
-      fetchDeliveries();
+    if (selectedProduct && selectedProduct.id !== undefined) {
+      await deleteProduct(selectedProduct.id);
+      fetchProducts();
       setIsModalOpen(false);
     }
   }
 
-  const openDeliveryDetails = (delivery: Delivery) => {
-    setSelectedDelivery(delivery);
+  const openProductDetails = (product: Product) => {
+    setSelectedProduct(product);
     setIsModalOpen(true);
     setModalType('details');
   }
@@ -50,27 +49,27 @@ export function DeliveryList() {
   return (
     <div>
       <h1 className="text-3xl font-bold leading-tight text-gray-900">
-        Delivery Management
+        Product Management
       </h1>
       <button
         onClick={() => openModal("create")}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Add New Delivery
+        Add New Product
       </button>
       <ul className="mt-6">
-        {deliveries.map((delivery) => (
-          <li key={delivery.id} className="flex justify-between items-center bg-white shadow px-4 py-2 rounded-lg mt-2">
-            <span onClick={() => openDeliveryDetails(delivery)} className="hover:underline cursor-pointer">{delivery.destination}</span>
+        {products.map((product) => (
+          <li key={product.id} className="flex justify-between items-center bg-white shadow px-4 py-2 rounded-lg mt-2">
+            <span onClick={() => openProductDetails(product)} className="hover:underline cursor-pointer">{product.name}</span>
             <div>
               <button
-                onClick={() => openModal("edit", delivery)}
+                onClick={() => openModal("edit", product)}
                 className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded ml-2"
               >
                 Update
               </button>
               <button
-                onClick={() => openModal("delete", delivery)}
+                onClick={() => openModal("delete", product)}
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
               >
                 Delete
@@ -80,7 +79,7 @@ export function DeliveryList() {
         ))}
       </ul>
       {
-        modalType === 'delete' && selectedDelivery ? (
+        modalType === 'delete' && selectedProduct ? (
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Confirm Deletion">
          <div>
             <p className="text-lg mb-4">
@@ -88,7 +87,7 @@ export function DeliveryList() {
             </p>
             <div className="bg-gray-100 p-4 rounded-lg">
               <h2 className="text-gray-800 font-semibold">
-                <span className="text-blue-600">{selectedDelivery?.destination}</span>
+                <span className="text-blue-600">{selectedProduct?.name}</span>
               </h2>
             </div>
             <div className="flex justify-end items-center p-4 mt-4 border-t border-gray-200">
@@ -107,17 +106,17 @@ export function DeliveryList() {
             </div>
           </div>
           </Modal>
-        ) : modalType === 'details' && selectedDelivery ? (
-            <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedDelivery.destination}>
-                <DeliveryDetails delivery={selectedDelivery} />
+        ) : modalType === 'details' && selectedProduct ? (
+            <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedProduct.name}>
+                <ProductDetails product={selectedProduct} />
             </Modal>
         ) : (
-            <DeliveryForm
+            <ProductForm
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 modalType={modalType}
-                delivery={selectedDelivery}
-                refreshDeliveries={fetchDeliveries}
+                product={selectedProduct}
+                refreshProducts={fetchProducts}
             />
         )
       }

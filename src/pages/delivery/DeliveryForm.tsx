@@ -113,14 +113,16 @@ export default function DeliveryForm({ isOpen, onClose, modalType, delivery, ref
         <ProductOrdersList
           productOrders={formData.productOrders}
           products={products}
-          handleAddProductOrder={handleAddProductOrder}
           handleChangeProductOrder={handleChangeProductOrder}
           handleRemoveProductOrder={handleRemoveProductOrder}
         />
 
-        <div className="flex justify-end space-x-2">
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
-          <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+<div className="flex justify-between space-x-2 mt-4">
+          <button type="button" onClick={handleAddProductOrder} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Add Product Order</button>
+          <div className="flex justify-end space-x-2">
+            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+          </div>
         </div>
       </form>
     </Modal>

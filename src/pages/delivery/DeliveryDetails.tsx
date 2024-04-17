@@ -1,4 +1,6 @@
-import { Delivery } from "../../interfaces/interface";
+import { getProducts } from "../../api/api";
+import { Delivery, Product } from "../../interfaces/interface";
+import { useEffect, useState } from "react";
 
 interface DeliveryDetailsProps {
   delivery: Delivery;
@@ -6,6 +8,21 @@ interface DeliveryDetailsProps {
 
 export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
   const deliveryDate = new Date(delivery.deliveryDate);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchProducts = async () => {
+    const response = await getProducts();
+    setProducts(response);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const getProductNameById = (productId: number): string => {
+    const product = products.find((product) => product.id === productId);
+    return product?.name || "";
+  };
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -32,7 +49,7 @@ export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
               <ul>
                 {delivery.productOrders.map((order, index) => (
                   <li key={index}>
-                    Product ID: {order.productId}, Quantity: {order.quantity}
+                    {getProductNameById(order.productId)}, Quantity: {order.quantity}
                   </li>
                 ))}
               </ul>

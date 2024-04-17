@@ -62,7 +62,7 @@ export default function AssignedDeliveries() {
         ))}
       </ul>
       {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={closeModal} title={selectedDelivery ? selectedDelivery.destination : selectedVan?.brand || 'Details'}>
+        <Modal isOpen={isModalOpen} onClose={closeModal} title={"Details"}>
           {selectedDelivery && <DeliveryDetails delivery={selectedDelivery} />}
           {selectedVan && !selectedDelivery && <VanDetails van={selectedVan} />}
         </Modal>

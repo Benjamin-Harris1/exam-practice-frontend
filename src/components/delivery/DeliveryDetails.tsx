@@ -60,11 +60,11 @@ export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Total Price:</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{totalPrice.toFixed()} DKK</dd>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{totalPrice.toFixed(2)} DKK</dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Total Weight:</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{totalWeight.toFixed()} g</dd>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{(totalWeight / 1000).toFixed(2)} kg</dd>
           </div>
         </dl>
       </div>

@@ -9,15 +9,15 @@ export const Header = () => {
     <header className="relative text-white bg-gray-900 rounded-lg shadow-lg">
       <div className="container flex items-center justify-between px-6 py-6 mx-auto">
         <h1 className={`${isMenuOpen ? "hidden" : "block"} md:block text-4xl`}>
-          <NavLink to="/" className="hover:text-gray-300" onClick={closeMenu}>
-            PRODUCTS
+          <NavLink to="/admin" className="hover:text-gray-300" onClick={closeMenu}>
+            MANAGER
           </NavLink>
         </h1>
         <nav className={`${isMenuOpen ? "block" : "hidden"} md:block`}>
           <ul className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-6">
             <li>
-              <NavLink to="/admin" className="hover:text-gray-300" onClick={closeMenu}>
-                ADMIN?
+              <NavLink to="/" className="hover:text-gray-300" onClick={closeMenu}>
+                HOME
               </NavLink>
             </li>
           </ul>

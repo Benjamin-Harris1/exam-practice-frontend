@@ -4,29 +4,36 @@ import { assignDeliveryToVan, deleteDelivery, getDeliveries, getVans } from "../
 import Modal from "../Modal";
 import DeliveryForm from "./DeliveryForm";
 import DeliveryDetails from "./DeliveryDetails";
+import VanSelector from "../van/VanSelector";
 
 export function DeliveryList() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"create" | "edit" | "delete" | "details" | "van">("create");
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
-  const [vanId, setVanId] = useState("");
-  const [vans, setVans] = useState([]);
+  const [vans, setVans] = useState<Van[]>([]);
 
   useEffect(() => {
     fetchDeliveries();
     fetchVans();
   }, []);
 
+  useEffect(() => {
+    if (isModalOpen && modalType === 'van') {
+      fetchVans();
+    }
+  }, [isModalOpen, modalType]); // ensure van is up to date when assigning deliveries
+
   const fetchDeliveries = async () => {
     const response = await getDeliveries();
-    setDeliveries(response);
+    const unassignedDeliveries = response.filter((delivery: Delivery) => delivery.vanId === 0);
+    setDeliveries(unassignedDeliveries);
   };
 
   const fetchVans = async () => {
     const response = await getVans();
     console.log(response);
-    
+
     setVans(response);
   };
 
@@ -45,7 +52,6 @@ export function DeliveryList() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedDelivery(null); // Reset selected product on modal close
-    setVanId("");
     fetchDeliveries(); // Refresh the product list after any operation
   };
 
@@ -143,29 +149,19 @@ export function DeliveryList() {
         </Modal>
       ) : modalType === "van" && selectedDelivery ? (
         <Modal isOpen={isModalOpen} onClose={closeModal} title="Assign Delivery to Van">
-      <div>
-        <label htmlFor="vanSelect">Choose a Van:</label>
-        <select
-          id="vanSelect"
-          value={vanId}
-          onChange={(e) => setVanId(e.target.value)}
-        >
-          <option value="">Select a Van</option>
-          {vans.map((van: Van) => (
-            <option key={van.id} value={van.id}>
-              {van.brand} {van.model} - Capacity: {van.capacity}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={() => {
-            if (selectedDelivery && selectedDelivery.id && vanId) handleAssignToVan(selectedDelivery.id, parseInt(vanId));
-          }}
-        >
-          Assign
-        </button>
-      </div>
-    </Modal>
+          {selectedDelivery && (
+            <VanSelector
+              onAssign={(selectedVanId) => {
+                if (selectedDelivery && selectedDelivery.id !== undefined){
+                  handleAssignToVan(selectedDelivery.id, selectedVanId);
+                  closeModal();
+                }
+              }}
+              vans={vans}
+              delivery={selectedDelivery}
+            />
+          )}
+        </Modal>
       ) : (
         <DeliveryForm
           isOpen={isModalOpen}

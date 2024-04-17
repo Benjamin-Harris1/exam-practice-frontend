@@ -11,6 +11,7 @@ export interface Delivery {
    fromWareHouse: string;
    destination: string;
    productOrders: ProductOrder[];
+   vanId?: number;
 }
 
 export interface ProductOrder {
@@ -24,5 +25,7 @@ export interface Van {
     brand: string;
     model: string;
     capacity: number;
+    remainingCapacity: number;
+    deliveries: Delivery[];
 }
 

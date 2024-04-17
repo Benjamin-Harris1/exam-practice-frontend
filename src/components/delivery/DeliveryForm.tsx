@@ -119,8 +119,8 @@ export default function DeliveryForm({ isOpen, onClose, modalType, delivery, ref
           handleRemoveProductOrder={handleRemoveProductOrder}
         />
         <div className="mt-4">
-          <p>Total Price: {totalPrice.toFixed()} DKK</p>
-          <p>Total Weight: {totalWeight.toFixed()} grams</p>
+          <p>Total Price: {totalPrice.toFixed(2)} DKK</p>
+          <p>Total Weight: {(totalWeight / 1000).toFixed(2)} kg</p>
         </div>
 
         <div className="flex justify-between space-x-2 mt-4">

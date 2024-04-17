@@ -32,8 +32,6 @@ export function DeliveryList() {
 
   const fetchVans = async () => {
     const response = await getVans();
-    console.log(response);
-
     setVans(response);
   };
 

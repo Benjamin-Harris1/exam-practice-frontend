@@ -80,6 +80,8 @@ export default function DeliveryForm({ isOpen, onClose, modalType, delivery, ref
       await createDelivery(formData);
     } else if (modalType === "edit" && delivery?.id) {
       await updateDelivery(delivery.id, formData);
+      console.log(formData);
+      
     }
     refreshDeliveries();
     onClose(); // Close modal after operation

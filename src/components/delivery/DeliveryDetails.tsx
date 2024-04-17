@@ -1,6 +1,7 @@
 import { getProducts } from "../../api/api";
 import { Delivery, Product } from "../../interfaces/interface";
 import { useEffect, useState } from "react";
+import { calculateTotalPriceAndWeight } from "./DeliveryUtils";
 
 interface DeliveryDetailsProps {
   delivery: Delivery;
@@ -9,6 +10,8 @@ interface DeliveryDetailsProps {
 export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
   const deliveryDate = new Date(delivery.deliveryDate);
   const [products, setProducts] = useState<Product[]>([]);
+
+  const { totalPrice, totalWeight } = calculateTotalPriceAndWeight(delivery.productOrders, products);
 
   const fetchProducts = async () => {
     const response = await getProducts();
@@ -39,7 +42,7 @@ export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
             <dt className="text-sm font-medium text-gray-500">From warehouse:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{delivery.fromWareHouse}</dd>
           </div>
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Destination:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{delivery.destination}</dd>
           </div>
@@ -54,6 +57,14 @@ export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
                 ))}
               </ul>
             </dd>
+          </div>
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Total Price:</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{totalPrice.toFixed()} DKK</dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Total Weight:</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{totalWeight.toFixed()} g</dd>
           </div>
         </dl>
       </div>

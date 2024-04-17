@@ -4,6 +4,7 @@ import { createDelivery, updateDelivery, getProducts } from '../../api/api';
 import InputField from '../InputField';
 import Modal from '../Modal';
 import ProductOrdersList from '../productorder/ProductOrderList';
+import { calculateTotalPriceAndWeight } from './DeliveryUtils';
 
 interface DeliveryFormProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function DeliveryForm({ isOpen, onClose, modalType, delivery, ref
     productOrders: delivery?.productOrders || [{ productId: 0, quantity: 0 }]
   });
   const [products, setProducts] = useState<Product[]>([]);
+  const { totalPrice, totalWeight } = calculateTotalPriceAndWeight(formData.productOrders, products);
 
   const handleAddProductOrder = () => {
     setFormData({
@@ -116,6 +118,10 @@ export default function DeliveryForm({ isOpen, onClose, modalType, delivery, ref
           handleChangeProductOrder={handleChangeProductOrder}
           handleRemoveProductOrder={handleRemoveProductOrder}
         />
+        <div className='mt-4'>
+          <p>Total Price: {totalPrice.toFixed()} DKK</p>
+          <p>Total Weight: {totalWeight.toFixed()} grams</p>
+        </div>
 
 <div className="flex justify-between space-x-2 mt-4">
           <button type="button" onClick={handleAddProductOrder} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Add Product Order</button>

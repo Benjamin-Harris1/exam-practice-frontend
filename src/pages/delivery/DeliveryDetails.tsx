@@ -1,0 +1,45 @@
+import { Delivery } from "../../interfaces/interface";
+
+interface DeliveryDetailsProps {
+  delivery: Delivery;
+}
+
+export default function DeliveryDetails({ delivery }: DeliveryDetailsProps) {
+  const deliveryDate = new Date(delivery.deliveryDate);
+
+  return (
+    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div className="px-4 py-5 sm:px-6">
+        <h1 className="text-lg leading-6 font-medium text-gray-900">Delivery Details</h1>
+      </div>
+      <div className="border-t border-gray-200">
+        <dl>
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-5000">Delivery date</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{deliveryDate.toISOString().split("T")[0]}</dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">From warehouse:</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{delivery.fromWareHouse}</dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Destination:</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{delivery.destination}</dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Product orders:</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <ul>
+                {delivery.productOrders.map((order, index) => (
+                  <li key={index}>
+                    Product ID: {order.productId}, Quantity: {order.quantity}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  );
+}

@@ -10,7 +10,7 @@ export interface Delivery {
    deliveryDate: Date;
    fromWareHouse: string;
    destination: string;
-   productOrder: ProductOrder[];
+   productOrders: ProductOrder[];
 }
 
 export interface ProductOrder {

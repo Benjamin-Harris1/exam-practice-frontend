@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Product } from "../../interfaces/interface";
-import { deleteProduct, getProducts } from "../../api/api";
+import { deleteProduct, getProducts, getProductsByName } from "../../api/api";
 import ProductForm from "./ProductForm";
 import Modal from "../Modal";
 import ProductDetails from "./ProductDetails";
+import SearchBar from "../SearchBar";
 
 export function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,6 +41,17 @@ export function ProductList() {
     }
   }
 
+  const handleSearch = async (searchTerm: string) => {
+    if (searchTerm){
+      const response = await getProductsByName(searchTerm);
+      // Check if response is an array (if it isn't, wrap in array, since we use map later)
+      const searchedProducts = Array.isArray(response) ? response : [response];
+      setProducts(searchedProducts);
+    } else {
+      fetchProducts();
+    }
+  }
+
   const openProductDetails = (product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -51,6 +63,7 @@ export function ProductList() {
       <h1 className="text-3xl font-bold leading-tight text-gray-900">
         Product Management
       </h1>
+      <SearchBar onSearch={handleSearch} />
       <button
         onClick={() => openModal("create")}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
